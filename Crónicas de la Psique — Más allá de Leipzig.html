@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es" data-fs="3">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crónicas de la Psique — Más allá de Leipzig</title>
+
+<!-- Tipografías: Playfair Display (titulares), Newsreader (cuerpo), Inter (metadatos) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,600&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ==========================================================================
+   1. TOKENS DE DISEÑO — papel antiguo (por defecto) e imprenta nocturna
+   ========================================================================== */
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --paper: #fbf8f1;
+  --paper-2: #f3eee1;
+  --ink: #1a1a1a;
+  --slate: #3a3a3a;
+  --muted: #5d5a52;
+  --burgundy: #8b1e1e;
+  --gold: #8a6a1c;
+  --rule: #1a1a1a;
+  --rule-soft: #cfc7b3;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
+  --f-display: "Playfair Display", "Didot", "Times New Roman", serif;
+  --f-body: "Newsreader", "Georgia", "Times New Roman", serif;
+  --f-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs: 19px;
+  --nav-h: 52px;
+  color-scheme: light;
+}
+html[data-fs="0"] { --fs: 15px; }
+html[data-fs="1"] { --fs: 16.5px; }
+html[data-fs="2"] { --fs: 17.5px; }
+html[data-fs="3"] { --fs: 19px; }
+html[data-fs="4"] { --fs: 20.5px; }
+html[data-fs="5"] { --fs: 22px; }
+html[data-fs="6"] { --fs: 24px; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15130f; --paper-2: #1f1c16; --ink: #ece6d8; --slate: #cfc8b8;
+    --muted: #a39d8e; --burgundy: #e58a85; --gold: #d6b560;
+    --rule: #ece6d8; --rule-soft: #3b3629; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #15130f; --paper-2: #1f1c16; --ink: #ece6d8; --slate: #cfc8b8;
+  --muted: #a39d8e; --burgundy: #e58a85; --gold: #d6b560;
+  --rule: #ece6d8; --rule-soft: #3b3629; color-scheme: dark;
+}
+
+/* ==========================================================================
+   2. BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-behavior: smooth; scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background-color: var(--paper); background-image: var(--grain);
+  color: var(--ink); font-family: var(--f-body); line-height: 1.5;
+  transition: background-color .3s, color .3s;
+}
+:focus-visible { outline: 2px solid var(--burgundy); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ==========================================================================
+   3. BARRA DE PROGRESO
+   ========================================================================== */
+.progress-wrap { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); pointer-events: none; }
+#bar { height: 4px; width: 0; background: var(--burgundy); }
+
+/* ==========================================================================
+   4. MÁSTIL
+   ========================================================================== */
+.masthead { max-width: 1180px; margin: 0 auto; padding: 14px 20px 0; text-align: center; }
+.ribbon { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; font: 500 .78rem/1.3 var(--f-ui); color: var(--slate); border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+.ribbon .price { font-weight: 600; color: var(--burgundy); }
+.ribbon select { font: inherit; color: var(--ink); background: var(--paper-2); border: 1px solid var(--rule-soft); padding: 4px 8px; border-radius: 0; }
+.nameplate { font-family: var(--f-display); font-weight: 900; letter-spacing: .02em; font-size: clamp(2.3rem, 9vw, 6.2rem); line-height: 1; margin: 22px 0 8px; text-wrap: balance; }
+.motto { font: italic 400 clamp(1.05rem, 2.4vw, 1.45rem)/1.3 var(--f-body); color: var(--slate); margin: 0 0 14px; }
+.special { border-top: 3px double var(--rule); border-bottom: 1px solid var(--rule); padding: 9px 0; font: 600 .88rem/1.4 var(--f-ui); color: var(--burgundy); }
+.special span { color: var(--ink); font-weight: 500; }
+
+/* ==========================================================================
+   5. NAVEGACIÓN FLOTANTE + AJUSTES DE LECTURA
+   ========================================================================== */
+.navbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 90; background: var(--paper); border-bottom: 1px solid var(--rule); }
+.navbar-inner { max-width: 1180px; margin: 0 auto; padding: 0 20px; min-height: var(--nav-h); display: flex; align-items: center; gap: 14px; justify-content: space-between; }
+.navlinks { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.navlinks::-webkit-scrollbar { display: none; }
+.navlinks a { white-space: nowrap; text-decoration: none; font: 500 .84rem/1 var(--f-ui); color: var(--slate); padding: 17px 10px 15px; border-bottom: 3px solid transparent; }
+.navlinks a:hover { color: var(--ink); }
+.navlinks a.active { color: var(--burgundy); border-bottom-color: var(--burgundy); font-weight: 600; }
+.tools { display: flex; gap: 6px; flex-shrink: 0; }
+.tools button { font: 600 .8rem/1 var(--f-ui); color: var(--ink); background: transparent; border: 1px solid var(--rule); padding: 8px 10px; cursor: pointer; min-width: 38px; }
+.tools button:hover { background: var(--ink); color: var(--paper); }
+.tools .theme-btn { font-weight: 500; }
+@media (max-width: 760px) {
+  .navbar-inner { flex-direction: column; align-items: stretch; gap: 0; padding: 0 12px; }
+  .tools { justify-content: flex-end; padding: 6px 0; border-top: 1px solid var(--rule-soft); order: 2; }
+  .navlinks { order: 1; }
+  .navlinks a { padding: 14px 10px 12px; }
+  :root { --nav-h: 98px; }
+}
+
+/* ==========================================================================
+   6. SECCIONES
+   ========================================================================== */
+main { max-width: 1040px; margin: 0 auto; padding: 0 20px 40px; }
+.story { padding: 44px 0 36px; border-bottom: 3px double var(--rule); scroll-margin-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 6px); }
+.story:last-of-type { border-bottom: 0; }
+.story-head { max-width: 860px; margin: 0 auto 30px; text-align: center; }
+.section-tag { display: inline-block; font: 600 .8rem/1.2 var(--f-ui); color: var(--burgundy); border-top: 1px solid var(--burgundy); border-bottom: 1px solid var(--burgundy); padding: 6px 14px; }
+.headline { font-family: var(--f-display); font-weight: 900; line-height: 1.1; letter-spacing: -.01em; font-size: clamp(1.7rem, 4.4vw, 3rem); margin: 18px 0 14px; text-wrap: balance; }
+.headline.xl { font-size: clamp(2rem, 5.6vw, 3.9rem); }
+.subtitle { font: italic 700 clamp(1.15rem, 2.4vw, 1.5rem)/1.3 var(--f-body); color: var(--slate); margin: 6px 0 8px; }
+.byline { font: 600 .82rem/1.4 var(--f-ui); color: var(--muted); margin: 0; }
+
+/* ==========================================================================
+   7. TEXTO EDITORIAL: columnas, capitulares, subtítulos
+   ========================================================================== */
+.cols { font-size: var(--fs); line-height: 1.58; hyphens: auto; -webkit-hyphens: auto; text-align: justify; }
+.cols p { margin: 0 0 .9em; text-wrap: pretty; }
+@media (min-width: 760px) {
+  .cols.two { column-count: 2; column-gap: 40px; column-rule: 1px solid var(--rule-soft); }
+}
+.cols.single { max-width: 760px; margin: 0 auto; }
+.dropcap::first-letter { font-family: var(--f-display); font-weight: 900; color: var(--burgundy); float: left; font-size: 4.3em; line-height: .8; padding: .07em .1em 0 0; }
+.sub { font: 700 clamp(1.3rem, 2.8vw, 1.7rem)/1.25 var(--f-display); margin: 34px auto 14px; max-width: 760px; padding-top: 14px; border-top: 1px solid var(--rule); }
+
+/* Citas inline interactivas */
+.cite { font: inherit; color: var(--burgundy); background: none; border: 0; border-bottom: 1px dotted var(--burgundy); padding: 0; cursor: help; text-align: inherit; hyphens: none; }
+.cite:hover, .cite[aria-expanded="true"] { background: color-mix(in srgb, var(--burgundy) 12%, transparent); }
+
+/* Fórmula con tipografía matemática (mismos caracteres que el texto original) */
+.math { font-style: italic; letter-spacing: .06em; white-space: nowrap; font-feature-settings: "lnum"; }
+.math .rm { font-style: normal; }
+
+/* ==========================================================================
+   8. ESQUEMAS (maquetados con los textos del documento)
+   ========================================================================== */
+figure.diagram { margin: 30px auto; max-width: 880px; border: 1px solid var(--rule); border-top: 5px solid var(--burgundy); background: var(--paper-2); }
+figure.diagram h4 { margin: 0; padding: 14px 18px; font: 700 clamp(1rem, 2.2vw, 1.3rem)/1.25 var(--f-display); text-align: center; border-bottom: 1px solid var(--rule); letter-spacing: .02em; }
+.map { display: grid; grid-template-columns: 1fr; }
+.map .row { display: grid; grid-template-columns: 1fr; border-bottom: 1px solid var(--rule-soft); }
+.map .row:last-child { border-bottom: 0; }
+.map .who { padding: 14px 18px; background: var(--paper); }
+.map .who b { display: block; font: 700 1.1rem/1.2 var(--f-display); color: var(--burgundy); margin-bottom: 4px; }
+.map .who span { font: 400 .95rem/1.4 var(--f-body); }
+.map ul { margin: 0; padding: 14px 18px 14px 36px; font: 400 1rem/1.45 var(--f-body); }
+.map li { margin-bottom: .3em; }
+@media (min-width: 700px) {
+  .map .row { grid-template-columns: 1fr 1.4fr; }
+  .map .who { border-right: 1px solid var(--rule-soft); }
+}
+
+.tree-top { text-align: center; padding: 14px 18px; font: 900 clamp(1.05rem, 2.4vw, 1.4rem)/1.2 var(--f-display); background: var(--ink); color: var(--paper); }
+.tree { display: grid; grid-template-columns: 1fr; gap: 0; }
+.tree .node { padding: 16px 18px 12px; border-top: 1px solid var(--rule-soft); }
+.tree .node h5 { margin: 0 0 8px; font: 700 1rem/1.25 var(--f-display); color: var(--burgundy); }
+.tree .node ul { margin: 0; padding-left: 1.15em; font: 400 .98rem/1.45 var(--f-body); }
+.tree .node li { margin-bottom: .3em; }
+@media (min-width: 760px) {
+  .tree { grid-template-columns: repeat(3, 1fr); }
+  .tree .node { border-top: 0; border-left: 1px solid var(--rule-soft); }
+  .tree .node:first-child { border-left: 0; }
+}
+
+/* Tribuna: lista de aportes */
+.points { list-style: none; margin: 4px auto 22px; padding: 0; max-width: 760px; font-size: var(--fs); line-height: 1.55; }
+.points li { padding: 14px 0 14px 18px; border-top: 1px solid var(--rule-soft); border-left: 4px solid var(--burgundy); margin-bottom: 10px; background: var(--paper-2); padding-left: 18px; padding-right: 14px; }
+.points strong { color: var(--burgundy); }
+
+/* ==========================================================================
+   9. VENTANA EMERGENTE DE CITAS
+   ========================================================================== */
+#pop { position: fixed; z-index: 120; max-width: min(320px, calc(100vw - 24px)); background: var(--ink); color: var(--paper); padding: 12px 14px; font: 400 .88rem/1.45 var(--f-ui); box-shadow: 0 6px 22px rgba(0,0,0,.28); border-top: 4px solid var(--burgundy); display: none; }
+#pop.on { display: block; }
+#pop strong { display: block; font: 700 1rem/1.25 var(--f-display); margin-bottom: 4px; }
+
+/* ==========================================================================
+   10. PIE
+   ========================================================================== */
+footer { max-width: 1040px; margin: 0 auto; padding: 20px 20px 50px; text-align: center; border-top: 3px double var(--rule); font: 400 .85rem/1.5 var(--f-ui); color: var(--muted); }
+footer .name { font: 900 1.4rem/1.2 var(--f-display); color: var(--ink); display: block; margin-bottom: 6px; }
+.totop { display: inline-block; margin-top: 14px; font: 600 .82rem/1 var(--f-ui); color: var(--burgundy); text-decoration: none; border-bottom: 1px solid var(--burgundy); padding-bottom: 3px; }
+</style>
+</head>
+
+<body>
+
+<div class="progress-wrap" aria-hidden="true"><div id="bar"></div></div>
+
+<!-- ============================ MÁSTIL ============================ -->
+<header class="masthead" id="top">
+  <div class="ribbon">
+    <span>Edición Libre</span>
+    <label>
+      <span style="position:absolute;left:-9999px">Selector de edición</span>
+      <select id="edition" aria-label="Selector de edición">
+        <option selected>Edición especial: Más allá de Leipzig</option>
+      </select>
+    </label>
+  </div>
+  <h1 class="nameplate">CRÓNICAS DE LA PSIQUE</h1>
+  <p class="motto">El diario de las ideas que moldearon la mente humana</p>
+  <div class="special">Edición Especial: <span>«Más allá de Leipzig: Los orígenes filosóficos e históricos que la ciencia olvidó contar»</span></div>
+</header>
+
+<!-- ================== NAVEGACIÓN Y AJUSTES DE LECTURA ================== -->
+<nav class="navbar" aria-label="Índice de la edición">
+  <div class="navbar-inner">
+    <div class="navlinks" id="navlinks">
+      <a href="#editorial">Editorial</a>
+      <a href="#s1">Sección I</a>
+      <a href="#s2">Sección II</a>
+      <a href="#s3">Sección III</a>
+      <a href="#tribuna">Tribuna de opinión</a>
+    </div>
+    <div class="tools" role="group" aria-label="Ajustes de lectura">
+      <button type="button" id="fsDown" aria-label="Reducir tamaño de letra">A−</button>
+      <button type="button" id="fsUp" aria-label="Aumentar tamaño de letra">A+</button>
+      <button type="button" id="themeBtn" class="theme-btn" aria-pressed="false">Imprenta nocturna</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================
+     EDITORIAL
+     =================================================================== -->
+<article class="story" id="editorial">
+  <header class="story-head">
+    <span class="section-tag">EDITORIAL</span>
+    <h2 class="headline xl">Los antecedentes de la psicología: entre las ciencias sociales y las ciencias naturales</h2>
+  </header>
+  <div class="cols single">
+    <p class="dropcap">Existe una creencia muy extendida según la cual la psicología comenzó de la nada en 1879, cuando Wilhelm Wundt abrió las puertas de su laboratorio en Alemania. Sin embargo, la ciencia no reemplazó mágicamente a la filosofía: los científicos del siglo XIX solo intentaron medir en el laboratorio las grandes preguntas que filósofos, humanistas y naturalistas llevaban siglos formulando.</p>
+  </div>
+</article>
+
+<!-- ===================================================================
+     SECCIÓN I
+     =================================================================== -->
+<article class="story" id="s1">
+  <header class="story-head">
+    <h2 class="headline">SECCIÓN I: LA ANTIGÜEDAD CLÁSICA Y EL ALBA DEL PENSAMIENTO</h2>
+    <p class="subtitle">Reportaje especial: De la filosofía a la psicología</p>
+    <p class="byline">Por la redacción cultural</p>
+  </header>
+
+  <div class="cols single">
+    <p class="dropcap">En la Grecia antigua ocurrió una de las transformaciones conceptuales más decisivas de nuestra civilización: el tránsito del <em>mythos</em> al <em>logos</em>. Los relatos sobre dioses comenzaron a ceder su lugar a la indagación racional sobre los principios del cosmos y la conducta humana para comprender porque actuamos como actuamos.</p>
+  </div>
+
+  <figure class="diagram">
+    <h4>MAPA CONCEPTUAL DEL PENSAMIENTO GRIEGO</h4>
+    <div class="map">
+      <div class="row">
+        <div class="who"><b>PLATÓN:</b><span>Racionalidad y gobierno de las pasiones</span></div>
+        <ul>
+          <li>Dualismo metafísico (cuerpo vs. alma)</li>
+          <li>El alma racional rige la conducta</li>
+          <li>Pasiones ligadas a lo corpóreo</li>
+        </ul>
+      </div>
+      <div class="row">
+        <div class="who"><b>ARISTÓTELES:</b><span>Funcionalismo del alma y cognición del <em>páthos</em></span></div>
+        <ul>
+          <li>El alma (<em>psyche</em>) como principio vital</li>
+          <li><em>Páthos</em>: Juicio cognitivo, social y corporal ante la realidad</li>
+        </ul>
+      </div>
+    </div>
+  </figure>
+
+  <div class="cols two">
+    <p>Platón propuso una división dualista: un cuerpo material frente a un alma inmortal dotada de una dimensión racional que era responsable de guiar el comportamiento moral. Para él, los afectos y las pasiones requerían educación y templanza, pues podían nublar la lucidez del alma racional y perturbar el orden de la ciudad ideal.</p>
+    <p>Años después, su discípulo Aristóteles dio un giro. Lejos de considerar las emociones como meros impulsos ciegos o apetitos animales, el definió el concepto de <em>páthos</em> como una alteración que afecta directamente los juicios de valor de las personas, siempre acompañada de placer o dolor. Para Aristóteles, sentir ira, temor o compasión no es una reacción automática desprovista de mente; implica juzgar quién nos ofende, en qué circunstancias y bajo qué criterios de justicia o estatus social (<button class="cite" type="button" data-ref="fb22" data-where="Sección I">Fernández &amp; Buis, 2022</button>). La psicología afectiva actual, con sus modelos de evaluación cognitiva, usa este principio.</p>
+  </div>
+</article>
+
+<!-- ===================================================================
+     SECCIÓN II
+     =================================================================== -->
+<article class="story" id="s2">
+  <header class="story-head">
+    <h2 class="headline">SECCIÓN II: MODERNIDAD Y LUCES</h2>
+    <p class="subtitle">Crónica histórica: Máquina cartesiana VS lienzo en blanco</p>
+    <p class="byline">Siglos XVII y XVIII</p>
+  </header>
+
+  <div class="cols single">
+    <p class="dropcap">La llegada de la Modernidad europea, el siglo XVII dió un giro hacia la obsesión por la mente (<em>mens</em>) y la conciencia.</p>
+  </div>
+
+  <div class="cols two" style="margin-top:6px">
+    <p>René Descartes, y su célebre fórmula <em>“Pienso y luego existo”</em>. Con ella el cuerpo humano pasó a concebirse como una máquina biológica regida por reflejos y leyes mecánicas de contacto y empuje, mientras que los procesos del pensamiento quedaron aislados en una sustancia pensante inmaterial.</p>
+    <p>La respuesta no tardó en llegar. Filósofos empiristas como John Locke y David Hume rechazaron las ideas innatas cartesianas. Para ellos, la mente al nacer es una hoja en blanco, una <em>tabula rasa</em>; todas nuestras facultades proceden de la experiencia sensorial y de la asociación de impresiones inmediatas en ideas complejas (<button class="cite" type="button" data-ref="cm26" data-where="Sección II">Cárdenas Montegranario, 2026</button>; <button class="cite" type="button" data-ref="ct17" data-where="Sección II">Castro Tejerina, 2017</button>). Con esta tesis, la percepción sensorial se convirtió en la puerta de entrada para entender los fenómenos mentales humanos.</p>
+  </div>
+</article>
+
+<!-- ===================================================================
+     SECCIÓN III
+     =================================================================== -->
+<article class="story" id="s3">
+  <header class="story-head">
+    <h2 class="headline">SECCIÓN III: EL CALDO DE CULTIVO DEL SIGLO XIX</h2>
+    <p class="subtitle">Reportaje central: La triple encrucijada que forjó a la psicología moderna</p>
+  </header>
+
+  <div class="cols single">
+    <p class="dropcap">A mediados del siglo XIX, la pregunta por el ser humano ya no podía responderse únicamente desde la filosofía. Tres corrientes prepararon el terreno para una disciplina independiente:</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="tree-top">EL NACIMIENTO DE LA PSICOLOGÍA</div>
+    <div class="tree">
+      <div class="node">
+        <h5>1. FISIOLOGÍA Y PSICOFÍSICA</h5>
+        <ul>
+          <li>Helmholtz: Inferencia inconsciente</li>
+          <li>Fechner: <span class="math"><i>S</i> = <i>k</i> <span class="rm">log</span> <i>I</i></span></li>
+          <li>Laboratorio y medición</li>
+        </ul>
+      </div>
+      <div class="node">
+        <h5>2. REVOLUCIÓN EVOLUTIVA</h5>
+        <ul>
+          <li>Darwin: Selección natural</li>
+          <li>Continuidad filogenética</li>
+          <li>Emoción como adaptación</li>
+          <li>Estudio de causas últimas</li>
+        </ul>
+      </div>
+      <div class="node">
+        <h5>3. CIENCIAS SOCIALES Y DEL ESPÍRITU</h5>
+        <ul>
+          <li>Humboldt: Lenguaje y comprensión (<em>Verstehen</em>)</li>
+          <li><em>Völkerpsychologie</em></li>
+          <li>Conciencia colectiva</li>
+        </ul>
+      </div>
+    </div>
+  </figure>
+
+  <h3 class="sub">1. Fisiología experimental y psicofísica</h3>
+  <div class="cols two">
+    <p>En los laboratorios alemanes, figuras como Hermann von Helmholtz demostraron que los procesos cognitivos se pueden medir. Al analizar la velocidad del impulso nervioso y las modalidades sensoriales, Helmholtz propuso que percibir no es un acto pasivo, sino una «inferencia inconsciente»: el cerebro deduce la realidad exterior a partir de las señales sensoriales que recibe de los nervios.</p>
+    <p>Casi simultáneamente, Gustav Fechner fundó la psicofísica al demostrar matemáticamente mediante la ley de Weber-Fechner (<span class="math"><i>S</i>=<i>k</i><span class="rm">log</span><i>I</i></span>) que existe una relación cuantitativa precisa entre la intensidad física de un estímulo y la sensación subjetiva experimentada (<button class="cite" type="button" data-ref="ct17" data-where="Sección III">Castro Tejerina, 2017</button>). El reino de lo subjetivo, que antes se consideraba imposible medir de forma exacta, se convertía en objeto de experimentación directa.</p>
+  </div>
+
+  <h3 class="sub">2. La revolución biológica y darwiniana</h3>
+  <div class="cols two">
+    <p>La publicación del libro <em>El origen de las especies</em> (1859) de Charles Darwin transformó radicalmente la concepción de la naturaleza. Al demostrar el parentesco filogenético de todos los seres vivos, Darwin derribó el abismo entre el animal y el ser humano. Facultades como las emociones, los hábitos y la inteligencia dejaron de verse como creaciones fijas que no podían cambiarse para comprenderse como herramientas funcionales forjadas en la lucha por la supervivencia y la adaptación al entorno.</p>
+    <p>Sin embargo, como advierten <button class="cite" type="button" data-ref="rhg23" data-where="Sección III">Roncancio-Henao y Gutiérrez (2023)</button>, la naciente psicología experimental prefirió aliarse con la fisiología mecanicista (enfocada en las causas inmediatas y los mecanismos de laboratorio) y desestimó la dimensión histórico-evolutiva (las causas últimas y el cambio en el tiempo), lo que generó fracturas teóricas que acompañarían a la disciplina durante todo el siglo XX.</p>
+  </div>
+
+  <h3 class="sub">3. Ciencias del espíritu y de la cultura: El individuo como ser social</h3>
+  <div class="cols two">
+    <p>Frente al mecanicismo, autores como Wilhelm von Humboldt, Heymann Steinthal y Moritz Lazarus reivindicaron las ciencias del espíritu. Para ellos, las creaciones superiores del ser humano como el lenguaje, el arte, la moral, el mito; no pueden explicarse mediante leyes físicas universales, sino a través de la comprensión de la cultura.</p>
+    <p>De este empeño nació la <em>Völkerpsychologie</em> (Psicología de los Pueblos), un ambicioso proyecto para investigar la mente colectiva y las leyes del espíritu en su despliegue histórico, proyecto que el propio Wundt consideró el complemento indispensable e insustituible de la psicología de laboratorio.</p>
+  </div>
+</article>
+
+<!-- ===================================================================
+     TRIBUNA DE OPINIÓN
+     =================================================================== -->
+<article class="story" id="tribuna">
+  <header class="story-head">
+    <h2 class="headline">TRIBUNA DE OPINIÓN</h2>
+    <p class="subtitle">¿Por qué importa recordar los orígenes precientíficos hoy?</p>
+  </header>
+
+  <div class="cols single">
+    <p class="dropcap">Reducir la psicología a la técnica de laboratorio o a la estadística psicométrica es despojarla de su brújula conceptual. La psicología contemporánea no nació por la invención de un aparato en 1879, sino por la maduración de debates sobre qué significa ser humano:</p>
+  </div>
+
+  <ul class="points">
+    <li><strong>La filosofía aportó las preguntas:</strong> Definió los problemas de la mente, el libre albedrío, la relación cuerpo-conciencia y el juicio ético-emocional.</li>
+    <li><strong>La fisiología y la psicofísica aportaron el rigor metodológico:</strong> Demostraron que los sentidos, la velocidad nerviosa y los umbrales perceptivos podían medirse y verificarse.</li>
+    <li><strong>La historia y la cultura aportaron el contexto social:</strong> Recordaron que la subjetividad humana se construye a través del lenguaje, las instituciones y la vida en comunidad.</li>
+  </ul>
+
+  <div class="cols single">
+    <p>Comprender esta genealogía permite valorar la psicología no como una técnica aislada, sino como una ciencia integradora.</p>
+  </div>
+</article>
+
+</main>
+
+<footer>
+  <span class="name">CRÓNICAS DE LA PSIQUE</span>
+  El diario de las ideas que moldearon la mente humana. Edición Libre.<br>
+  <a class="totop" href="#top">Volver al inicio</a>
+</footer>
+
+<div id="pop" role="tooltip" aria-live="polite"></div>
+
+<script>
+/* ==========================================================================
+   A. UTILIDADES Y ALMACENAMIENTO SEGURO
+   ========================================================================== */
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+/* ==========================================================================
+   B. BARRA DE PROGRESO DE LECTURA
+   ========================================================================== */
+const bar = $('#bar');
+let ticking = false;
+function updateProgress() {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
+  bar.style.width = pct + '%';
+  ticking = false;
+}
+window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(updateProgress); ticking = true; } }, { passive: true });
+window.addEventListener('resize', updateProgress);
+updateProgress();
+
+/* ==========================================================================
+   C. NAVEGACIÓN: sección activa mientras se lee
+   ========================================================================== */
+const links = $$('#navlinks a');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      const act = $('#navlinks a.active'), wrap = $('#navlinks');
+      if (act) wrap.scrollTo({ left: act.offsetLeft - wrap.clientWidth / 2 + act.clientWidth / 2, behavior: 'smooth' });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+links.forEach(a => { const t = $(a.getAttribute('href')); if (t) io.observe(t); });
+
+/* ==========================================================================
+   D. AJUSTES DE LECTURA: tamaño de letra y modo de contraste
+   ========================================================================== */
+const root = document.documentElement;
+let fs = parseInt(store.get('cdp-fs') ?? '3', 10);
+if (isNaN(fs) || fs < 0 || fs > 6) fs = 3;
+function setFs(n) { fs = Math.max(0, Math.min(6, n)); root.setAttribute('data-fs', String(fs)); store.set('cdp-fs', String(fs)); }
+setFs(fs);
+$('#fsDown').addEventListener('click', () => setFs(fs - 1));
+$('#fsUp').addEventListener('click', () => setFs(fs + 1));
+
+const themeBtn = $('#themeBtn');
+function currentTheme() {
+  return root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+}
+function labelTheme(t) {
+  themeBtn.textContent = t === 'dark' ? 'Papel antiguo' : 'Imprenta nocturna';
+  themeBtn.setAttribute('aria-pressed', String(t === 'dark'));
+}
+function applyTheme(t) { root.setAttribute('data-theme', t); labelTheme(t); store.set('cdp-theme', t); }
+const savedTheme = store.get('cdp-theme');
+if (savedTheme === 'dark' || savedTheme === 'light') applyTheme(savedTheme); else labelTheme(currentTheme());
+themeBtn.addEventListener('click', () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'));
+
+/* ==========================================================================
+   E. CITAS INTERACTIVAS: ventana emergente al pasar el cursor o pulsar
+   ========================================================================== */
+const REFS = {
+  fb22:  'Fernández & Buis, 2022',
+  cm26:  'Cárdenas Montegranario, 2026',
+  ct17:  'Castro Tejerina, 2017',
+  rhg23: 'Roncancio-Henao y Gutiérrez (2023)'
+};
+const pop = $('#pop');
+let popOwner = null, pinned = false, hideTimer = null;
+function showPop(btn, pin) {
+  clearTimeout(hideTimer);
+  popOwner = btn; pinned = !!pin;
+  pop.innerHTML = '';
+  const t = document.createElement('strong'); t.textContent = REFS[btn.dataset.ref] || '';
+  const p = document.createElement('div'); p.textContent = 'Fuente citada en la ' + btn.dataset.where + '.';
+  pop.append(t, p);
+  pop.classList.add('on');
+  btn.setAttribute('aria-expanded', 'true');
+  const r = btn.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+  const left = Math.min(Math.max(12, r.left + r.width / 2 - pw / 2), window.innerWidth - pw - 12);
+  let top = r.bottom + 8;
+  if (top + ph > window.innerHeight - 12) top = Math.max(12, r.top - ph - 8);
+  pop.style.left = left + 'px'; pop.style.top = top + 'px';
+}
+function hidePop(force) {
+  if (pinned && !force) return;
+  pop.classList.remove('on');
+  if (popOwner) popOwner.setAttribute('aria-expanded', 'false');
+  popOwner = null; pinned = false;
+}
+$$('.cite').forEach(btn => {
+  btn.setAttribute('aria-expanded', 'false');
+  btn.addEventListener('mouseenter', () => { if (!pinned) showPop(btn, false); });
+  btn.addEventListener('mouseleave', () => { hideTimer = setTimeout(() => hidePop(false), 180); });
+  btn.addEventListener('focus', () => { if (!pinned) showPop(btn, false); });
+  btn.addEventListener('blur', () => { hideTimer = setTimeout(() => hidePop(false), 180); });
+  btn.addEventListener('click', (e) => { e.stopPropagation(); if (popOwner === btn && pinned) hidePop(true); else showPop(btn, true); });
+});
+document.addEventListener('click', (e) => { if (!pop.contains(e.target)) hidePop(true); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hidePop(true); });
+window.addEventListener('scroll', () => hidePop(true), { passive: true });
+</script>
+</body>
+</html>
